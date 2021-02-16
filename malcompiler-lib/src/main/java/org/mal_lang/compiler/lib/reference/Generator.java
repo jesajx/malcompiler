@@ -391,6 +391,54 @@ public class Generator extends JavaGenerator {
     parentBuilder.addMethod(builder.build());
   }
 
+  private void createGetAttackStepParents(TypeSpec.Builder parentBuilder, AttackStep attackStep) {
+    MethodSpec.Builder builder = MethodSpec.methodBuilder("getAttackStepParents");
+    builder.addAnnotation(Override.class);
+    builder.addModifiers(Modifier.PUBLIC);
+
+    ClassName set = ClassName.get(Set.class);
+    ClassName as = ClassName.get("core", "AttackStep");
+    TypeName asSet = ParameterizedTypeName.get(set, as);
+    builder.returns(asSet);
+
+    builder.addStatement("var tmp = super.getAttackStepParents()");
+
+    for (StepExpr expr : attackStep.getParentSteps()) {
+      AutoFlow af = new AutoFlow();
+      AutoFlow end = generateExpr(af, expr, attackStep.getAsset());
+      end.addStatement("tmp.add($N)", end.prefix);
+      af.build(builder);
+    }
+
+    builder.addStatement("return tmp");
+
+    parentBuilder.addMethod(builder.build());
+  }
+
+  private void createGetAttackStepChildren(TypeSpec.Builder parentBuilder, AttackStep attackStep) {
+    MethodSpec.Builder builder = MethodSpec.methodBuilder("getAttackStepChildren");
+    builder.addAnnotation(Override.class);
+    builder.addModifiers(Modifier.PUBLIC);
+
+    ClassName set = ClassName.get(Set.class);
+    ClassName as = ClassName.get("core", "AttackStep");
+    TypeName asSet = ParameterizedTypeName.get(set, as);
+    builder.returns(asSet);
+
+    builder.addStatement("var tmp = super.getAttackStepChildren()");
+
+    for (StepExpr expr : attackStep.getReaches()) {
+      AutoFlow af = new AutoFlow();
+      AutoFlow end = generateExpr(af, expr, attackStep.getAsset());
+      end.addStatement("tmp.add($N)", end.prefix);
+      af.build(builder);
+    }
+
+    builder.addStatement("return tmp");
+
+    parentBuilder.addMethod(builder.build());
+  }
+
   private void createUpdateChildren(
       TypeSpec.Builder parentBuilder, AttackStep attackStep, String cacheName) {
     MethodSpec.Builder builder = MethodSpec.methodBuilder("updateChildren");
@@ -485,11 +533,13 @@ public class Generator extends JavaGenerator {
       String name = String.format("_cacheChildren%s", ucFirst(attackStep.getName()));
       createSetField(builder, name);
       createUpdateChildren(builder, attackStep, name);
+      createGetAttackStepChildren(builder, attackStep);
     }
     if (!attackStep.getParentSteps().isEmpty()) {
       String name = String.format("_cacheParent%s", ucFirst(attackStep.getName()));
       createSetField(builder, name);
       builder.addMethod(createSetExpectedParents(attackStep, name).build());
+      createGetAttackStepParents(builder, attackStep);
     }
     builder.addMethod(
         createFullName(attackStep.getAsset().getName(), attackStep.getName()).build());
@@ -603,12 +653,14 @@ public class Generator extends JavaGenerator {
         String name = String.format("_cacheChildren%s", ucFirst(attackStep.getName()));
         createSetField(builder, name);
         createUpdateChildren(builder, attackStep, name);
+        createGetAttackStepChildren(builder, attackStep);
       }
 
       if (!attackStep.getParentSteps().isEmpty()) {
         String name = String.format("_cacheParent%s", ucFirst(attackStep.getName()));
         createSetField(builder, name);
         builder.addMethod(createSetExpectedParents(attackStep, name).build());
+        createGetAttackStepParents(builder, attackStep);
       }
       builder.addMethod(
           createLocalTtc(attackStep.getAsset().getName(), attackStep.getName()).build());
