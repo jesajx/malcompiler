@@ -41,6 +41,13 @@ public class AttackStep {
 
   public void updateChildren(Set<AttackStep> activeAttackSteps) {}
 
+  public Set<AttackStep> getAttackStepParents() {
+      return new HashSet<AttackStep>();
+  }
+  public Set<AttackStep> getAttackStepChildren() {
+      return new HashSet<AttackStep>();
+  }
+
   public void updateTtc(AttackStep parent, double parentTtc, Set<AttackStep> activeAttackSteps) {}
 
   protected void addExpectedParent(AttackStep parent) {
