@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -694,6 +695,40 @@ public class Generator extends JavaGenerator {
     return builder;
   }
 
+  private void createAssetGetFields(TypeSpec.Builder assetBuilder, Asset asset) {
+    var builder = MethodSpec.methodBuilder("getFields");
+
+    // protected HashMap<String, HashSet<Asset>> getFields() {
+
+    builder.addAnnotation(Override.class);
+    builder.addModifiers(Modifier.PUBLIC);
+
+    ClassName stringType = ClassName.get(String.class);
+    ClassName hashSetType = ClassName.get(HashSet.class);
+    ClassName hashMapType = ClassName.get(HashMap.class);
+    ClassName assetType = ClassName.get("core", "Asset");
+
+    TypeName assetHashSetType = ParameterizedTypeName.get(hashSetType, assetType);
+    TypeName fieldHashMap = ParameterizedTypeName.get(hashMapType, stringType, assetHashSetType);
+
+    builder.returns(fieldHashMap);
+
+    builder.addStatement("var fields = super.getFields()");
+    for (Field field : asset.getFields().values()) {
+      builder.addStatement("fields.put($S, new $T())", field.getName(), assetHashSetType);
+
+      if (field.getMax() > 1) {
+        builder.addStatement("fields.get($S).addAll($N)", field.getName(), field.getName());
+      } else {
+        builder.beginControlFlow("if ($N != null)", field.getName());
+        builder.addStatement("fields.get($S).add($N)", field.getName(), field.getName());
+        builder.endControlFlow();
+      }
+    }
+    builder.addStatement("return fields");
+    assetBuilder.addMethod(builder.build());
+  }
+
   private void createExtra(TypeSpec.Builder assetBuilder, Asset asset) {
     if (!asset.getFields().isEmpty()) {
       MethodSpec.Builder builder = MethodSpec.methodBuilder("getAssociatedAssetClassName");
@@ -762,6 +797,8 @@ public class Generator extends JavaGenerator {
       }
       builder.addStatement("return $N", "assets");
       assetBuilder.addMethod(builder.build());
+
+      createAssetGetFields(assetBuilder, asset);
     }
   }
 

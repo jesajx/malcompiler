@@ -3,6 +3,7 @@ package core;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -190,6 +191,10 @@ public class Asset {
       sourceAssets.addAll(targetAssets);
     }
     return targetAssets;
+  }
+
+  public HashMap<String, HashSet<Asset>> getFields() {
+    return new HashMap<String, HashSet<Asset>>();
   }
 
   protected Set<Asset> getAssociatedAssets(Set<String> roleNames) {
