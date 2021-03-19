@@ -80,7 +80,7 @@ public class AttackStep {
 
   public void assertCompromisedInstantaneously() {
     if (ttc < 1.0 / 1440) {
-      System.out.println("+ " + fullName() + " was reached instantaneously as expected.");
+      //System.out.println("+ " + fullName() + " was reached instantaneously as expected.");
     } else {
       System.out.println(
           fullName() + ".ttc was supposed to be small, but was " + Double.toString(ttc) + ".");
@@ -91,8 +91,8 @@ public class AttackStep {
 
   public void assertCompromisedWithEffort() {
     if (ttc >= 1.0 / 1440 && ttc < 1000) {
-      System.out.println(
-          "+ " + fullName() + " was reached in " + Double.toString(ttc) + " days, as expected.");
+      //System.out.println(
+      //    "+ " + fullName() + " was reached in " + Double.toString(ttc) + " days, as expected.");
     } else {
       System.out.println(
           fullName()
@@ -106,8 +106,8 @@ public class AttackStep {
 
   public void assertCompromisedInNDays(Double nDays) {
     if (ttc >= nDays && ttc < nDays + 1) {
-      System.out.println(
-          "+ " + fullName() + " was reached in " + Double.toString(ttc) + " days, as expected.");
+      //System.out.println(
+      //    "+ " + fullName() + " was reached in " + Double.toString(ttc) + " days, as expected.");
     } else {
       System.out.println(
           fullName()
@@ -125,7 +125,7 @@ public class AttackStep {
 
   public void assertUncompromised() {
     if (ttc == Double.MAX_VALUE) {
-      System.out.println("+ " + fullName() + " was not reached, as expected.");
+      //System.out.println("+ " + fullName() + " was not reached, as expected.");
     } else {
       System.out.println(
           fullName() + ".ttc was supposed to be infinite, but was " + Double.toString(ttc) + ".");
@@ -138,18 +138,18 @@ public class AttackStep {
   public void assertUncompromisedFrom(AttackStep expectedParent) {
     if ((abs(ttc - expectedParent.ttc) == Double.MAX_VALUE)
         || (ttc == Double.MAX_VALUE && expectedParent.ttc == Double.MAX_VALUE)) {
-      System.out.println(
-          "+ "
-              + fullName()
-              + " ("
-              + Double.toString(ttc)
-              + ")"
-              + " was not reached from "
-              + expectedParent.fullName()
-              + " ("
-              + Double.toString(expectedParent.ttc)
-              + ")"
-              + " as expected.");
+      //System.out.println(
+      //    "+ "
+      //        + fullName()
+      //        + " ("
+      //        + Double.toString(ttc)
+      //        + ")"
+      //        + " was not reached from "
+      //        + expectedParent.fullName()
+      //        + " ("
+      //        + Double.toString(expectedParent.ttc)
+      //        + ")"
+      //        + " as expected.");
     } else {
       System.out.println(
           fullName()
@@ -168,12 +168,12 @@ public class AttackStep {
 
   public void assertCompromisedInstantaneouslyFrom(AttackStep expectedParent) {
     if (Math.abs(ttc - expectedParent.ttc) < 0.1) {
-      System.out.println(
-          "+ "
-              + fullName()
-              + " was reached instantaneously from "
-              + expectedParent.fullName()
-              + " as expected.");
+      //System.out.println(
+      //    "+ "
+      //        + fullName()
+      //        + " was reached instantaneously from "
+      //        + expectedParent.fullName()
+      //        + " as expected.");
     } else {
       System.out.println(
           fullName()
@@ -195,14 +195,14 @@ public class AttackStep {
 
   public void assertCompromisedWithEffortFrom(AttackStep expectedParent) {
     if (Math.abs(ttc - expectedParent.ttc) >= 0.1 && ttc < Double.MAX_VALUE) {
-      System.out.println(
-          "+ "
-              + fullName()
-              + " was reached in "
-              + Double.toString(ttc - expectedParent.ttc)
-              + " days from "
-              + expectedParent.fullName()
-              + " as expected.");
+      //System.out.println(
+      //    "+ "
+      //        + fullName()
+      //        + " was reached in "
+      //        + Double.toString(ttc - expectedParent.ttc)
+      //        + " days from "
+      //        + expectedParent.fullName()
+      //        + " as expected.");
     } else {
       System.out.println(
           fullName()
