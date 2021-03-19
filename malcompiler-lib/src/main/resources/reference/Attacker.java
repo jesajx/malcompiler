@@ -103,6 +103,16 @@ public class Attacker {
         return (a + b) / 2;
       case "Zero":
         return 0;
+      case "EasyAndCertain":
+        return 0; // TODO
+      case "HardAndUncertain":
+        return 0; // TODO
+      case "VeryHardAndUncertain":
+        return 0; // TODO
+      case "Disabled":
+        return Double.MAX_VALUE; // TODO
+      case "Enabled":
+        return 0; // TODO
       default:
         System.err.println(String.format("No matching distribution for: %s", dist));
         return 0;
